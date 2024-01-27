@@ -1,0 +1,21 @@
+{
+  "name": "slide-recorder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "record": "tsx main.ts"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "puppeteer": "^21.9.0",
+    "puppeteer-screen-recorder": "^2.1.2"
+  }
+}
