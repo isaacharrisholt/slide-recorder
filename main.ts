@@ -45,13 +45,22 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   // Screenshot and record for 15s if slide has a gif
 
   // Screenshot
+  console.log('Screenshotting')
   await page.screenshot({
     path: `${outputDir}/${slide}.png`,
   })
+  console.log('Screenshot done')
 
   // Check if slide has gif
   const hasGif = await page.evaluate(() => {
-    const images = document.querySelectorAll('img')
+    // Get slide (section) with class 'present'
+    const currentSlide = document.querySelectorAll('section.present')[0]
+    if (!currentSlide) {
+      console.log('No current slide')
+      return
+    }
+
+    const images = currentSlide.querySelectorAll('img')
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
       if (image.src.endsWith('.gif')) {
@@ -66,22 +75,24 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   }
 
   // Record
+  console.log('Recording')
   const recorder = new PuppeteerScreenRecorder(page, RECORDER_CONFIG)
 
   await recorder.start(`${outputDir}/${slide}.mp4`)
   await new Promise((resolve) => setTimeout(resolve, VIDEO_LENGTH_SECONDS * 1000))
   await recorder.stop()
+  console.log('Recording done')
 }
 
 async function main() {
   console.log('Starting server')
-  const browser = await puppeteer.launch({ headless: false })
-  const page = await browser.newPage()
-
-  await page.goto(`http://Isaac-PC.local:${PORT}`)
-  const recorder = new PuppeteerScreenRecorder(page, {
-    fps: 60,
+  const browser = await puppeteer.launch({
+    headless: 'new', defaultViewport: null, args: [
+      `--window-size=${RECORDER_CONFIG.videoFrame.width},${RECORDER_CONFIG.videoFrame.height}`,
+    ]
   })
+  const page = await browser.newPage()
+  await page.goto(`http://localhost:${PORT}`)
 
   // Create output directory
   if (!fs.existsSync('./output')) {
