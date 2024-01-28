@@ -47,7 +47,7 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   // Screenshot
   console.log('Screenshotting')
   await page.screenshot({
-    path: `${outputDir}/${slide}.png`,
+    path: `${outputDir}/Slide ${slide}.png`,
   })
   console.log('Screenshot done')
 
@@ -78,7 +78,7 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   console.log('Recording')
   const recorder = new PuppeteerScreenRecorder(page, RECORDER_CONFIG)
 
-  await recorder.start(`${outputDir}/${slide}.mp4`)
+  await recorder.start(`${outputDir}/Slide ${slide}.mp4`)
   await new Promise((resolve) => setTimeout(resolve, VIDEO_LENGTH_SECONDS * 1000))
   await recorder.stop()
   console.log('Recording done')
@@ -87,8 +87,13 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
 async function main() {
   console.log('Starting server')
   const browser = await puppeteer.launch({
-    headless: 'new', defaultViewport: null, args: [
-      `--window-size=${RECORDER_CONFIG.videoFrame.width},${RECORDER_CONFIG.videoFrame.height}`,
+    headless: 'new',
+    defaultViewport: {
+      width: RECORDER_CONFIG.videoFrame.width,
+      height: RECORDER_CONFIG.videoFrame.height,
+    },
+    args: [
+      `--window-size=${RECORDER_CONFIG.videoFrame.width},${RECORDER_CONFIG.videoFrame.height + 160}`,
     ]
   })
   const page = await browser.newPage()
