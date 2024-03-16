@@ -47,7 +47,7 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   // Screenshot
   console.log('Screenshotting')
   await page.screenshot({
-    path: `${outputDir}/Slide ${slide}.png`,
+    path: `${outputDir}/slides/Slide ${slide}.png`,
   })
   console.log('Screenshot done')
 
@@ -78,7 +78,7 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
   console.log('Recording')
   const recorder = new PuppeteerScreenRecorder(page, RECORDER_CONFIG)
 
-  await recorder.start(`${outputDir}/Slide ${slide}.mp4`)
+  await recorder.start(`${outputDir}/gifs/Slide ${slide}.mp4`)
   await new Promise((resolve) => setTimeout(resolve, VIDEO_LENGTH_SECONDS * 1000))
   await recorder.stop()
   console.log('Recording done')
@@ -109,6 +109,12 @@ async function main() {
   const dateDir = `./output/${date.toISOString().split('.')[0]}`
   if (!fs.existsSync(dateDir)) {
     fs.mkdirSync(dateDir)
+  }
+  if (!fs.existsSync(`${dateDir}/slides`)) {
+    fs.mkdirSync(`${dateDir}/slides`)
+  }
+  if (!fs.existsSync(`${dateDir}/gifs`)) {
+    fs.mkdirSync(`${dateDir}/gifs`)
   }
 
   let slide = 0
