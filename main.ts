@@ -106,7 +106,7 @@ async function main() {
 
   // Create date directory
   const date = new Date()
-  const dateDir = `./output/${date.toISOString().split('.')[0]}`
+  const dateDir = `./output/${date.toISOString().split('.')[0].replace(/:/g, '-')}`
   if (!fs.existsSync(dateDir)) {
     fs.mkdirSync(dateDir)
   }
