@@ -42,7 +42,7 @@ async function nextSlide(page: Page): Promise<boolean> {
 }
 
 async function handleSlide(page: Page, outputDir: string, slide: number) {
-  // Screenshot and record for 15s if slide has a gif
+  // Screenshot and record for 15s if slide has a gif or webp
 
   // Screenshot
   console.log('Screenshotting')
@@ -63,7 +63,7 @@ async function handleSlide(page: Page, outputDir: string, slide: number) {
     const images = currentSlide.querySelectorAll('img')
     for (let i = 0; i < images.length; i++) {
       const image = images[i]
-      if (image.src.endsWith('.gif')) {
+      if (image.src.endsWith('.gif') || image.src.endsWith('.webp')) {
         return true
       }
     }
